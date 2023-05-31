@@ -1,3 +1,0 @@
-foo
-===
-README text here.
