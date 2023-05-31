@@ -33,7 +33,7 @@
 (define π pi)
 (define 1second 1000)
 (define 1rad 0.0174533)
-(define twelve-rad (- (/ π 2)))
+(define zero-angle (- (/ π 2))) ; as in twelve-o-clock
 (define 1min-rad (/ π 30))
 (define 1hour-rad (/ π 6))
 
@@ -56,7 +56,7 @@
         (+ 100 (vec2-v2 vec))))
 
 (define (draw-clock-hand dc mag a)
-  (let ([adjusted-angle (+ twelve-rad a)])
+  (let ([adjusted-angle (+ zero-angle a)])
     (draw-line dc (vec2 (* mag (cos adjusted-angle))
                         (* mag (sin adjusted-angle))))))
 
