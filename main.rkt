@@ -43,7 +43,10 @@
 (define 1hour-rad (/ π 6))
 
 (define (min->rad min) (* min 1min-rad))
-(define (hour->rad hour) (* hour 1hour-rad))
+
+(define (hour->rad hour min)
+  (if (>= min 60) hour
+      (* (+ hour (/ min 60)) 1hour-rad)))
 
 ;;; App
 (define win-h 200)
@@ -67,6 +70,11 @@
 
 (define (draw-hour-hand dc a)
   (draw-clock-hand dc 40 a))
+
+;;;
+;; (define (hour+min h m)
+;;   (/ m 4))
+
 
 ;; Draw hour marks
 (define mark-angles
@@ -139,7 +147,7 @@
          [min (date-minute now)]
          [hour (mil-hour (date-hour now))])
     (send canvas modify-hand-angles
-          (λ (_h _m) (cons (hour->rad hour)
+          (λ (_h _m) (cons (hour->rad hour min)
                            (min->rad min))))))
 
 (define canvas (new clock-canvas% [parent frame]))
