@@ -101,10 +101,10 @@
   (class canvas%
     (define min-angle 0)
     (define hour-angle 0)
-    
+
     (define (redraw)
       (let ([dc (send this get-dc)])
-        (send (send this get-dc) clear)
+        (send dc clear)
         (draw-clock-background dc)
         (draw-minute-hand dc min-angle)
         (draw-hour-hand dc hour-angle)))
