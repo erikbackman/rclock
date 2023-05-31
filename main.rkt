@@ -98,11 +98,9 @@
             mark-angles))
 
 ;; Canvas
-(struct hand-angles (min hour))
-
+;; Ugly OOP UI code >:|
 (define clock-canvas%
   (class canvas%
-;    (define angles (hand-angles 0 0))
     (define min-angle 0)
     (define hour-angle 50)
     
