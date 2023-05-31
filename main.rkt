@@ -22,13 +22,8 @@
   (vec2 (/ (vec2-v1 vec) n)
         (/ (vec2-v2 vec) n)))
 
-(define (vec-values vec)
-  (match vec
-    [(cons x y) (values x y)]))
-
 (define (normalize vec)
-  (let ([m (mag vec)])
-    (*vec (/ 1 m) vec)))
+  (*vec (/ 1 (mag vec)) vec))
 
 (define (-vec v1 v2)
   (vec2 (- (vec2-v1 v1) (vec2-v1 v2))
