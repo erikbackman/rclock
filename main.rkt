@@ -29,6 +29,10 @@
   (vec2 (- (vec2-v1 v1) (vec2-v1 v2))
         (- (vec2-v2 v1) (vec2-v2 v2))))
 
+(define (+vec v1 v2)
+  (vec2 (+ (vec2-v1 v1) (vec2-v1 v2))
+        (+ (vec2-v2 v1) (vec2-v2 v2))))
+
 ;;; Time/angle
 (define π pi)
 (define 1second 1000)
@@ -37,11 +41,12 @@
 (define 1min-rad (/ π 30))
 (define 1hour-rad (/ π 6))
 
+(define (min/hour min) (/ min 60))
 (define (min->rad min) (* min 1min-rad))
 
 (define (hour->rad hour min)
   (if (>= min 60) hour
-      (* (+ hour (/ min 60)) 1hour-rad)))
+      (* (+ hour (min/hour min)) 1hour-rad)))
 
 ;;; App
 (define win-h 200)
@@ -129,7 +134,7 @@
 (define (mil-hour h)
   (cond
     [(zero? h) 12]
-    [(> h 13) (abs (- 12 h))]
+    [(> h 13) (- h 12)]
     [else h]))
 
 (define (update-time)
