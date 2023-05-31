@@ -102,7 +102,7 @@
 (define clock-canvas%
   (class canvas%
     (define min-angle 0)
-    (define hour-angle 50)
+    (define hour-angle 0)
     
     (define (redraw)
       (let ([dc (send this get-dc)])
@@ -129,8 +129,10 @@
   (send frame show #f))
 
 (define (mil-hour h)
-  (if (> h 13) (abs (- 12 h))
-      h))
+  (cond
+    [(zero? h) 12]
+    [(> h 13) (abs (- 12 h))]
+    [else h]))
 
 (define (update-time)
   (let* ([now (current-date)]
