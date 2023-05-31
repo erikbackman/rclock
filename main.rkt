@@ -66,11 +66,6 @@
 (define (draw-hour-hand dc a)
   (draw-clock-hand dc 40 a))
 
-;;;
-;; (define (hour+min h m)
-;;   (/ m 4))
-
-
 ;; Draw hour marks
 (define mark-angles
   (for/fold ([acc '()]
