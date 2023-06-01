@@ -148,9 +148,9 @@
        [parent frame]
        
        [draw
-        (λ (ma ha h dc)
+        (λ (min-a hour-a win-h dc)
           (send dc set-alignment-scale 1.0)
-          (draw-clock dc h ma ha))]
+          (draw-clock dc win-h min-a hour-a))]
        
        [handle-kb-event
         (λ (key)
