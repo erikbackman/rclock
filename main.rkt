@@ -156,6 +156,9 @@
         (λ (key)
           (cond [(equal? key 'escape) (send frame show #f)]))]))
 
+
+;; Timers
+
 (define (update-time)
   (let* ([now (current-date)]
          [min (date-minute now)]
@@ -163,8 +166,6 @@
     (send canvas modify-hand-angles
           (λ (_h _m) (cons (hour->rad hour min)
                            (min->rad min))))))
-
-;; Timers
 (define time-update-timer
   (new timer%
        [notify-callback update-time]
