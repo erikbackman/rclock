@@ -49,8 +49,10 @@
       (* (+ hour (min/hour min)) 1hour-rad)))
 
 ;;; App
-(define win-h 200)
-(define win-w 200)
+(define win-h 400)
+(define win-w 400)
+(define origin-x (/ win-w 2))
+(define origin-y (/ win-h 2))
 
 (define black-brush (new brush% [color "black"]))
 (define white-pen (new pen% [color "white"] [width 2] [style 'solid]))
@@ -61,9 +63,9 @@
   (send dc draw-ellipse 0 0 win-h win-w))
 
 (define (draw-line dc vec)
-  (send dc draw-line 100 100
-        (+ 100 (vec2-v1 vec))
-        (+ 100 (vec2-v2 vec))))
+  (send dc draw-line origin-x origin-y
+        (+ origin-x (vec2-v1 vec))
+        (+ origin-y (vec2-v2 vec))))
 
 (define (draw-clock-hand dc mag a)
   (let ([adjusted-angle (+ zero-angle a)])
@@ -71,19 +73,20 @@
                         (* mag (sin adjusted-angle))))))
 
 (define (draw-minute-hand dc a)
-  (draw-clock-hand dc 80 a))
+  ;; (70/100)(h/2)
+  (draw-clock-hand dc (* 70 (/ win-h 200)) a))
 
 (define (draw-hour-hand dc a)
-  (draw-clock-hand dc 40 a))
+  (draw-clock-hand dc (* 40 (/ win-h 200)) a))
 
 (define mark-angles
   (stream->list (in-range 0 (* 2 π) (/ π 6))))
 
 (define (draw-mark-at-angle dc angle)
   (let* ([magnitude 10]
-         [radius 100]
-         [offset 100]
-         [origin (vec2 100 100)]
+         [radius (/ win-h 2)]
+         [offset (/ win-h 2)]
+         [origin (vec2 offset offset)]
          [x-start (+ offset (* radius (cos angle)))]
          [y-start (+ offset (* radius (sin angle)))]
          [dir (*vec magnitude
@@ -114,6 +117,11 @@
         (draw-clock-background dc)
         (draw-minute-hand dc min-angle)
         (draw-hour-hand dc hour-angle)))
+
+    (define (close)
+      (send
+       (send this get-parent) show #f)
+      (exit))
     
     (define/public (modify-hand-angles f)
       (let ([new (f hour-angle min-angle)])
@@ -121,16 +129,23 @@
         (redraw)))
 
     (super-new)
+    
     (define/override (on-paint)
       (let [(dc (send this get-dc))]
         (send dc set-alignment-scale 1.0)
+        (printf "redraw\n")
         (redraw)
-        (super on-paint)))))
+        (super on-paint)))
+    (define/override (on-char key-event)
+      (let ([keycode (send key-event get-key-code)])
+        (cond
+          [(equal? keycode 'escape) (close)])))))
 
-(define frame (new frame% [label "RacketClock"]))
-
-(define (close frame)
-  (send frame show #f))
+(define frame
+  (new frame%
+       [label "RacketClock"]
+       [width win-w]
+       [height win-h]))
 
 (define (mil-hour h)
   (cond
@@ -147,13 +162,6 @@
                            (min->rad min))))))
 
 (define canvas (new clock-canvas% [parent frame]))
-
-(new button% [parent frame]
-     [label "Quit"]
-     [callback (λ (_button _event)
-                 (close frame)
-;                 (exit)
-                 )])
 
 (define time-update-timer
   (new timer%
