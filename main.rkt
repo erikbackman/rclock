@@ -147,7 +147,6 @@
                            (min->rad min))))))
 
 (define canvas (new clock-canvas% [parent frame]))
-(send canvas set-canvas-background (make-object color% 0 0 0 1.0))
 
 (new button% [parent frame]
      [label "Quit"]
