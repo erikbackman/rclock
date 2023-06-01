@@ -72,7 +72,7 @@
 
 (define (draw-minute-hand dc a win-h)
   ;; (70/100)(h/2)
-  (draw-clock-hand dc (* 70 (/ win-h 200)) a win-h))
+  (draw-clock-hand dc (* 80 (/ win-h 200)) a win-h))
 
 (define (draw-hour-hand dc a win-h)
   (draw-clock-hand dc (* 40 (/ win-h 200)) a win-h))
@@ -81,7 +81,7 @@
   (stream->list (in-range 0 (* 2 π) (/ π 6))))
 
 (define (make-mark-at-angle angle win-h)
-  (let* ([magnitude 10]
+  (let* ([magnitude 20]
          [radius (/ win-h 2)]
          [offset (/ win-h 2)]
          [origin (vec2 offset offset)]
