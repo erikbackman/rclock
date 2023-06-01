@@ -35,6 +35,7 @@
 (define zero-angle (- (/ π 2))) ; as in twelve-o-clock
 (define 1min-rad (/ π 30))
 (define 1hour-rad (/ π 6))
+(define padding 10)
 
 (define (mil-hour h)
   (cond
@@ -53,22 +54,24 @@
 ;;; Drawing
 (define black-brush (new brush% [color "black"]))
 (define white-pen (new pen% [color "white"] [width 2] [style 'solid]))
+(define gray-pen (new pen% [color "gray"] [width 2] [style 'solid]))
 
 (define (draw-clock-outline dc win-h)
   (send dc set-brush black-brush)
   (send dc set-pen white-pen)
   (send dc draw-ellipse 0 0 win-h win-h))
 
-(define (draw-line dc vec x0)
-  (send dc draw-line x0 x0
+(define (draw-line dc vec x0 y0)
+  (send dc draw-line x0 y0
         (+ x0 (vec2-v1 vec))
-        (+ x0 (vec2-v2 vec))))
+        (+ y0 (vec2-v2 vec))))
 
 (define (draw-clock-hand dc mag a win-h)
-  (let ([adjusted-angle (+ zero-angle a)])
+  (let ([adjusted-angle (+ zero-angle a)]
+        [x0 (/ win-h 2)])
     (draw-line dc (vec2 (* mag (cos adjusted-angle))
                         (* mag (sin adjusted-angle)))
-               (/ win-h 2))))
+               x0 x0)))
 
 (define (draw-minute-hand dc a win-h)
   (draw-clock-hand dc (* 80 (/ win-h 200)) a win-h))
@@ -131,16 +134,14 @@
     
     (define/override (on-paint)
       (_draw min-angle hour-angle
-            (send this get-height)
-            (send this get-dc)))
+             (send this get-height)
+             (send this get-dc)))
     
     (define/override (on-char key-event)
       (_handle-kb-event (send key-event get-key-code)))))
 
 ;; Main window
-(define frame
-  (new frame%
-       [label "RacketClock"]))
+(define frame (new frame% [label "RacketClock"]))
 
 (define canvas
   (new clock-canvas%
@@ -154,7 +155,6 @@
        [handle-kb-event
         (λ (key)
           (cond [(equal? key 'escape) (send frame show #f)]))]))
-
 
 ;; Timers
 
@@ -170,9 +170,13 @@
        [notify-callback update-time]
        [interval #f]))
 
+;;;
 
-;;
-(update-time)
-(send time-update-timer start (* 60 1second))
 
-(send frame show #t)
+(module+ main
+  (provide run)
+  
+  (define (run)
+    (update-time)
+    (send time-update-timer start (* 60 1second))
+    (send frame show #t)))
