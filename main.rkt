@@ -52,7 +52,12 @@
 (define win-h 200)
 (define win-w 200)
 
+(define black-brush (new brush% [color "black"]))
+(define white-pen (new pen% [color "white"] [width 2] [style 'solid]))
+
 (define (draw-clock-outline dc)
+  (send dc set-brush black-brush)
+  (send dc set-pen white-pen)
   (send dc draw-ellipse 0 0 win-h win-w))
 
 (define (draw-line dc vec)
@@ -104,6 +109,7 @@
 
     (define (redraw)
       (let ([dc (send this get-dc)])
+        (send dc set-background "black")
         (send dc clear)
         (draw-clock-background dc)
         (draw-minute-hand dc min-angle)
@@ -113,7 +119,7 @@
       (let ([new (f hour-angle min-angle)])
         (set!-values (hour-angle min-angle) (values (car new) (cdr new)))
         (redraw)))
-    
+
     (super-new)
     (define/override (on-paint)
       (let [(dc (send this get-dc))]
@@ -141,12 +147,14 @@
                            (min->rad min))))))
 
 (define canvas (new clock-canvas% [parent frame]))
+(send canvas set-canvas-background (make-object color% 0 0 0 1.0))
 
 (new button% [parent frame]
      [label "Quit"]
      [callback (λ (_button _event)
                  (close frame)
-                 (exit))])
+;                 (exit)
+                 )])
 
 (define time-update-timer
   (new timer%
