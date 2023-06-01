@@ -71,7 +71,6 @@
                (/ win-h 2))))
 
 (define (draw-minute-hand dc a win-h)
-  ;; (70/100)(h/2)
   (draw-clock-hand dc (* 80 (/ win-h 200)) a win-h))
 
 (define (draw-hour-hand dc a win-h)
