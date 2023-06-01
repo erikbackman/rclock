@@ -71,13 +71,8 @@
 (define (draw-hour-hand dc a)
   (draw-clock-hand dc 40 a))
 
-;; Draw hour marks
 (define mark-angles
-  (for/fold ([acc '()]
-             [angle 0]
-             #:result (reverse acc))
-            ([_ (in-range 0 12)])
-    (values (cons angle acc) (+ (/ π 6) angle))))
+  (stream->list (in-range 0 (* 2 π) (/ π 6))))
 
 (define (draw-mark-at-angle dc angle)
   (let* ([magnitude 10]
