@@ -141,7 +141,7 @@
       (_handle-kb-event (send key-event get-key-code)))))
 
 ;; Main window
-(define frame (new frame% [label "RacketClock"]))
+(define frame (new frame% [label "rclock"]))
 
 (define canvas
   (new clock-canvas%
@@ -154,10 +154,11 @@
        
        [handle-kb-event
         (λ (key)
-          (cond [(equal? key 'escape) (send frame show #f)]))]))
+          (cond [(equal? key 'escape)
+                 (send frame show #f)
+                 (exit)]))]))
 
 ;; Timers
-
 (define (update-time)
   (let* ([now (current-date)]
          [min (date-minute now)]
@@ -170,13 +171,12 @@
        [notify-callback update-time]
        [interval #f]))
 
+(define (run)
+  (update-time)
+  (send time-update-timer start (* 60 1second))
+  (send frame show #t))
+
 ;;;
 
-
 (module+ main
-  (provide run)
-  
-  (define (run)
-    (update-time)
-    (send time-update-timer start (* 60 1second))
-    (send frame show #t)))
+  (run))
